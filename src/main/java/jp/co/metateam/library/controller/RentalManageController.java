@@ -143,40 +143,35 @@ public class RentalManageController {
        @PostMapping("/rental/{id}/edit")
        public String update(@PathVariable("id") String id, Model model, @Valid @ModelAttribute RentalManageDto rentalManageDto, BindingResult result, RedirectAttributes ra) {
            try {
+
+            if (result.hasErrors()) {
+                throw new Exception("Validation error.");
+            }
+
             RentalManage rentalManage = this.rentalManageService.findById(Long.valueOf(id));
             Optional <String> statusError = rentalManageDto.isvalidStatus(rentalManage.getStatus());
 
-               if(statusError.isPresent()){ 
-                FieldError fieldError = new FieldError("rentalManageDto","status",statusError.get());
+            if (statusError.isPresent()) { 
+                 FieldError fieldError = new FieldError("rentalManageDto", "status", statusError.get());
 
-                result.addError(fieldError);
-
-               throw new Exception("Validation error");
-               }
+                 result.addError(fieldError);
+ 
+                 throw new Exception("Validation error");
+            }
                
-               if (result.hasErrors()) {
-                   throw new Exception("Validation error.");
-               }
+               
 
                //更新
-               rentalManageService.update(Long.valueOf(id),rentalManageDto);
-               return "redirect:/rental/index";
+            rentalManageService.update(Long.valueOf(id),rentalManageDto);
+            return "redirect:/rental/index";
               
            } catch (Exception e) {
                log.error(e.getMessage());
    
                ra.addFlashAttribute("rentalManageDto", rentalManageDto);
-               ra.addFlashAttribute("org.springframework.validation.BindingResult.rentalManageDto", result);
-
-               List<Stock> stockList = this.stockService.findStockAvailableAll();
-               List<Account> accountList= this.accountService.findAll();
- 
-              //モデル
-               model.addAttribute("rentalStatus",RentalStatus.values());
-               model.addAttribute("stockList",stockList);
-               model.addAttribute("accounts",accountList);
+               ra.addFlashAttribute("org.springframework.validation.BindingResult.rentalManageDto", result);             
    
-               return "rental/edit";
+               return "redirect:/rental/{id}/edit";
            }
        }
  

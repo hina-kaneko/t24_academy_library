@@ -18,12 +18,13 @@ import jp.co.metateam.library.values.RentalStatus;
 
 @Service
 public class RentalManageService {
-
+ 
     private final AccountRepository accountRepository;
     private final RentalManageRepository rentalManageRepository;
     private final StockRepository stockRepository;
 
-     @Autowired
+
+    @Autowired
     public RentalManageService(
         AccountRepository accountRepository,
         RentalManageRepository rentalManageRepository,
