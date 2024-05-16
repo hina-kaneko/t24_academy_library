@@ -149,20 +149,19 @@ public class RentalManageController {
             }
 
             RentalManage rentalManage = this.rentalManageService.findById(Long.valueOf(id));
-            Optional <String> statusError = rentalManageDto.isvalidStatus(rentalManage.getStatus());
+            Optional <String> statusError = rentalManageDto.isValidStatus(rentalManage.getStatus());
 
             if (statusError.isPresent()) { 
-                 FieldError fieldError = new FieldError("rentalManageDto", "status", statusError.get());
+                FieldError fieldError = new FieldError("rentalManageDto", "status", statusError.get());
 
-                 result.addError(fieldError);
+                result.addError(fieldError);
  
-                 throw new Exception("Validation error");
+                throw new Exception("Validation error");
             }
                
-               
-
                //更新
             rentalManageService.update(Long.valueOf(id),rentalManageDto);
+
             return "redirect:/rental/index";
               
            } catch (Exception e) {

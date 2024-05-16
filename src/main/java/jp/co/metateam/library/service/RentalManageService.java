@@ -17,6 +17,7 @@ import jp.co.metateam.library.repository.StockRepository;
 import jp.co.metateam.library.values.RentalStatus;
 
 @Service
+
 public class RentalManageService {
  
     private final AccountRepository accountRepository;
@@ -123,3 +124,4 @@ public class RentalManageService {
         return rentalManage;
     }
 }
+    
