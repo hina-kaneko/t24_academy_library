@@ -100,9 +100,9 @@ public class RentalManageController {
             //貸出可否チェックスタート
             //今回借りたい本の情報を取得
             Stock stock= this.stockService.findById(rentalManageDto.getStockId());
-           //借りたい本が利用可かどうか調べる
+            //借りたい本が利用可かどうか調べる
             if (stock == null){
-           //Stockがnullなら画面に飛ばす
+            //Stockがnullなら画面に飛ばす
                 throw new Exception("Validation error");    
             }
             //Stockのステータスが貸出不可なら画面に飛ばす
@@ -119,11 +119,11 @@ public class RentalManageController {
             
             for(RentalManage list : rentalManageList){
                 if(list.getExpectedRentalOn().compareTo(rentalManageDto.getExpectedReturnOn()) <= 0 &&
-                 rentalManageDto.getExpectedRentalOn().compareTo(list.getExpectedReturnOn()) <= 0){
-                 FieldError fieldError = new FieldError("rentalManageDto", "status", "この期間では登録できません");
-                 result.addError(fieldError);
+                    rentalManageDto.getExpectedRentalOn().compareTo(list.getExpectedReturnOn()) <= 0){
+                    FieldError fieldError = new FieldError("rentalManageDto", "status", "この期間では登録できません");
+                    result.addError(fieldError);
 
-                throw new Exception("Validation error.");
+                    throw new Exception("Validation error.");
                 }
             }    
             /// 貸出可否チェック終了
@@ -193,12 +193,12 @@ public class RentalManageController {
                 throw new Exception("Validation error");
             }
 
-             //貸出可否チェックスタート
+            //貸出可否チェックスタート
             //今回借りたい本の情報を取得
             Stock stock= this.stockService.findById(rentalManageDto.getStockId());
-           //借りたい本が利用可かどうか調べる
+            //借りたい本が利用可かどうか調べる
             if (stock == null){
-           //Stockがnullなら画面に飛ばす
+            //Stockがnullなら画面に飛ばす
                 throw new Exception("Validation error");    
             }
             //Stockのステータスが貸出不可なら画面に飛ばす
@@ -222,19 +222,19 @@ public class RentalManageController {
             for(RentalManage list : rentalManageList){
                 //リストの貸出管理番号とDtoの貸出管理番号が同じだった場合スキップ
                 if(list.getId() == rentalManageDto.getId()){
-                 continue;    
+                    continue;    
                 }
                 if(list.getExpectedRentalOn().compareTo(rentalManageDto.getExpectedReturnOn()) <= 0 &&
                 rentalManageDto.getExpectedRentalOn().compareTo(list.getExpectedReturnOn()) <= 0){
-                FieldError fieldError = new FieldError("rentalManageDto", "status", "この期間では登録できません");
-                result.addError(fieldError);
+                    FieldError fieldError = new FieldError("rentalManageDto", "status", "この期間では登録できません");
+                    result.addError(fieldError);
 
-                throw new Exception("Validation error.");
-            }
+                    throw new Exception("Validation error.");
+                }
             }    
             /// 貸出可否チェック終了
 
-               //更新
+            //更新
             rentalManageService.update(Long.valueOf(id),rentalManageDto);
 
             return "redirect:/rental/index";

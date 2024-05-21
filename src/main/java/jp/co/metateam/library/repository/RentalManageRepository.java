@@ -16,7 +16,5 @@ public interface RentalManageRepository extends JpaRepository<RentalManage, Long
 	Optional<RentalManage> findById(Long id);
     //在庫管理番号に基づく、貸出待ち（０）と貸出中（１）のデータを持ってくる
     @Query("SELECT r FROM RentalManage r WHERE r.stock.id =?1 AND r.status in (0,1)") 
-     List<RentalManage> findByStockIdAndStatus(String newStock_id);
-     
-    
+     List<RentalManage> findByStockIdAndStatus(String newStock_id); 
 }
