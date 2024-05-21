@@ -1,5 +1,6 @@
 package jp.co.metateam.library.service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -17,12 +18,13 @@ import jp.co.metateam.library.repository.StockRepository;
 import jp.co.metateam.library.values.RentalStatus;
 
 @Service
-
 public class RentalManageService {
  
     private final AccountRepository accountRepository;
     private final RentalManageRepository rentalManageRepository;
     private final StockRepository stockRepository;
+    java.util.Date utilDate = new java.util.Date();
+    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
 
     @Autowired
@@ -48,6 +50,10 @@ public class RentalManageService {
         return this.rentalManageRepository.findById(id).orElse(null);
     }
    
+    @Transactional
+    public List<RentalManage> findByStockIdAndStatus(String newStockId){
+        return this.rentalManageRepository.findByStockIdAndStatus(newStockId);
+    }
 
     @Transactional 
     public void save(RentalManageDto rentalManageDto) throws Exception {
@@ -109,7 +115,8 @@ public class RentalManageService {
             throw e;
         }
     }
-
+    
+        
     private RentalManage setRentalStatusDate(RentalManage rentalManage, Integer status) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         
@@ -124,4 +131,4 @@ public class RentalManageService {
         return rentalManage;
     }
 }
-    
+
