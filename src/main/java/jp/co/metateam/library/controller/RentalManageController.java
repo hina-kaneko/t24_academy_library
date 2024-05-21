@@ -28,6 +28,8 @@ import jp.co.metateam.library.model.StockDto;
 import jp.co.metateam.library.service.StockService;
  
 import lombok.extern.log4j.Log4j2;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.validation.FieldError;
@@ -94,6 +96,38 @@ public class RentalManageController {
             if (result.hasErrors()) {
                 throw new Exception("Validation error.");
             }
+
+            //貸出可否チェックスタート
+            //今回借りたい本の情報を取得
+            Stock stock= this.stockService.findById(rentalManageDto.getStockId());
+           //借りたい本が利用可かどうか調べる
+            if (stock == null){
+           //Stockがnullなら画面に飛ばす
+                throw new Exception("Validation error");    
+            }
+            //Stockのステータスが貸出不可なら画面に飛ばす
+            if (stock.getStatus() == 1){
+                FieldError fieldError = new FieldError("rentalManageDto", "status", "この本は貸出できません");
+
+                result.addError(fieldError);
+ 
+                throw new Exception("Validation error");
+            }
+     
+            String newStockId = rentalManageDto.getStockId();
+            List<RentalManage> rentalManageList = this.rentalManageService.findByStockIdAndStatus(newStockId);
+            
+            for(RentalManage list : rentalManageList){
+                if(list.getExpectedRentalOn().compareTo(rentalManageDto.getExpectedReturnOn()) <= 0 &&
+                 rentalManageDto.getExpectedRentalOn().compareTo(list.getExpectedReturnOn()) <= 0){
+                 FieldError fieldError = new FieldError("rentalManageDto", "status", "この期間では登録できません");
+                 result.addError(fieldError);
+
+                throw new Exception("Validation error.");
+                }
+            }    
+            /// 貸出可否チェック終了
+            
             // 登録処理
             this.rentalManageService.save(rentalManageDto);
  
@@ -158,7 +192,48 @@ public class RentalManageController {
  
                 throw new Exception("Validation error");
             }
-               
+
+             //貸出可否チェックスタート
+            //今回借りたい本の情報を取得
+            Stock stock= this.stockService.findById(rentalManageDto.getStockId());
+           //借りたい本が利用可かどうか調べる
+            if (stock == null){
+           //Stockがnullなら画面に飛ばす
+                throw new Exception("Validation error");    
+            }
+            //Stockのステータスが貸出不可なら画面に飛ばす
+            if (stock.getStatus() == 1){
+                FieldError fieldError = new FieldError("rentalManageDto", "status", "この本は貸出できません");
+
+                result.addError(fieldError);
+ 
+                throw new Exception("Validation error");
+            }
+     
+            String newStockId = rentalManageDto.getStockId();
+            List<RentalManage> rentalManageList = this.rentalManageService.findByStockIdAndStatus(newStockId);
+
+            if(rentalManageList == null){
+                this.rentalManageService.save(rentalManageDto);
+
+                return "redirect:/rental/index";
+            }
+
+            for(RentalManage list : rentalManageList){
+                //リストの貸出管理番号とDtoの貸出管理番号が同じだった場合スキップ
+                if(list.getId() == rentalManageDto.getId()){
+                 continue;    
+                }
+                if(list.getExpectedRentalOn().compareTo(rentalManageDto.getExpectedReturnOn()) <= 0 &&
+                rentalManageDto.getExpectedRentalOn().compareTo(list.getExpectedReturnOn()) <= 0){
+                FieldError fieldError = new FieldError("rentalManageDto", "status", "この期間では登録できません");
+                result.addError(fieldError);
+
+                throw new Exception("Validation error.");
+            }
+            }    
+            /// 貸出可否チェック終了
+
                //更新
             rentalManageService.update(Long.valueOf(id),rentalManageDto);
 
@@ -173,7 +248,5 @@ public class RentalManageController {
                return "redirect:/rental/{id}/edit";
            }
        }
- 
- 
     }
  
