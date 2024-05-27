@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.validation.Valid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import java.util.Date;
  
 import jp.co.metateam.library.model.Account;
 import jp.co.metateam.library.model.AccountDto;
@@ -116,14 +117,14 @@ public class RentalManageController {
      
             String newStockId = rentalManageDto.getStockId();
             List<RentalManage> rentalManageList = this.rentalManageService.findByStockIdAndStatus(newStockId);
-            
+
             for(RentalManage list : rentalManageList){
                 if(list.getExpectedRentalOn().compareTo(rentalManageDto.getExpectedReturnOn()) <= 0 &&
-                    rentalManageDto.getExpectedRentalOn().compareTo(list.getExpectedReturnOn()) <= 0){
-                    FieldError fieldError = new FieldError("rentalManageDto", "status", "この期間では登録できません");
-                    result.addError(fieldError);
+                 rentalManageDto.getExpectedRentalOn().compareTo(list.getExpectedReturnOn()) <= 0){
+                 FieldError fieldError = new FieldError("rentalManageDto", "status", "この期間では登録できません");
+                 result.addError(fieldError);
 
-                    throw new Exception("Validation error.");
+                throw new Exception("Validation error.");
                 }
             }    
             /// 貸出可否チェック終了
@@ -177,6 +178,18 @@ public class RentalManageController {
        @PostMapping("/rental/{id}/edit")
        public String update(@PathVariable("id") String id, Model model, @Valid @ModelAttribute RentalManageDto rentalManageDto, BindingResult result, RedirectAttributes ra) {
            try {
+            Date expectedRentalOn = rentalManageDto.getExpectedRentalOn();
+            Date expectedReturnOn = rentalManageDto.getExpectedReturnOn();
+               
+            Optional<String> dayError = rentalManageDto.ValidDateTime(expectedRentalOn,expectedReturnOn);
+            if(dayError.isPresent()){
+                FieldError fieldError = new FieldError("rentalManageDto","expectedReturnOn", dayError.get());
+                //dateErrorから取得したエラーメッセージをfieldErrorに入れる
+                result.addError(fieldError);
+                //resultにエラーの情報を入れる
+                throw new Exception("Validation error");
+                //エラーを投げる
+            }
 
             if (result.hasErrors()) {
                 throw new Exception("Validation error.");
@@ -212,11 +225,9 @@ public class RentalManageController {
      
             String newStockId = rentalManageDto.getStockId();
             List<RentalManage> rentalManageList = this.rentalManageService.findByStockIdAndStatus(newStockId);
-
+        
             if(rentalManageList == null){
                 this.rentalManageService.save(rentalManageDto);
-
-                return "redirect:/rental/index";
             }
 
             for(RentalManage list : rentalManageList){
