@@ -51,6 +51,16 @@ public class RentalManageDto {
     private Stock stock;
 
     private Account account;
+
+    
+    public Optional<String> ValidDateTime(Date expectedRentalOn, Date expectedReturnOn) {
+ 
+        if (expectedRentalOn.compareTo(expectedReturnOn) >=0){
+ 
+            return Optional.of("返却予定日は貸出予定日より後の日付を入力してください");
+        }
+        return Optional.empty();
+    }
     
         public Optional<String> isValidStatus(Integer preStatus) {
             String errorMessage = "貸出ステータスは%sから%sに変更することはできません";
