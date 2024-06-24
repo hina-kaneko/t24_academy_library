@@ -11,26 +11,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
  
 import jakarta.validation.Valid;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import java.util.Date;
  
 import jp.co.metateam.library.model.Account;
-import jp.co.metateam.library.model.AccountDto;
-import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.service.AccountService;
-import jp.co.metateam.library.values.AuthorizationTypes;
+
 import jp.co.metateam.library.model.RentalManage;
 import jp.co.metateam.library.model.RentalManageDto;
 import jp.co.metateam.library.service.RentalManageService;
 import jp.co.metateam.library.values.RentalStatus;
 import jp.co.metateam.library.model.Stock;
-import jp.co.metateam.library.model.StockDto;
+
 import jp.co.metateam.library.service.StockService;
  
 import lombok.extern.log4j.Log4j2;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.validation.FieldError;
@@ -160,7 +155,7 @@ public class RentalManageController {
              
  
               model.addAttribute("rentalManageList",rentalManage);
-             
+              
               rentalManageDto.setId(rentalManage.getId());
               rentalManageDto.setEmployeeId(rentalManage.getAccount().getEmployeeId());
               rentalManageDto.setExpectedRentalOn(rentalManage.getExpectedRentalOn());
