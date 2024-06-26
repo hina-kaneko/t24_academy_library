@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jp.co.metateam.library.constants.Constants;
-import jp.co.metateam.library.model.Account;
 import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.Stock;
 import jp.co.metateam.library.model.RentalManage;
@@ -170,25 +168,22 @@ public class StockService {
                 if (dayNums == 0) {
                     dayNum.add("x");
                 } else {
+                    dayNum.add(String.valueOf(dayNums));
 
-                
-                dayNum.add(String.valueOf(dayNums));
-
+                }
             }
-        }
             List<Object> bookinfo = new ArrayList<>();
 
             bookinfo.add(title);
             bookinfo.add(stockId);
             bookinfo.add(dayNum);
 
-            someValues.add(bookinfo);
-
-            
+            someValues.add(bookinfo);        
                      
         }
         return someValues;
     }
+    
 }
 
 

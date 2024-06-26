@@ -9,8 +9,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
- 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import jakarta.validation.Valid;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
  
 import jp.co.metateam.library.model.Account;
@@ -68,20 +74,41 @@ public class RentalManageController {
     }
  
     @GetMapping("/rental/add")
-    public String add(Model model) {
-     //テーブルから情報を持ってくる
-     List<RentalManage> rentalManageList= this.rentalManageService.findAll();
-     List<Stock> stockList = this.stockService.findStockAvailableAll();
-     List<Account> accountList= this.accountService.findAll();
+        public String add(@RequestParam(required = false) String fig, String bookTi, Model model) {
+        //テーブルから情報を持ってくる
+        List<RentalManage> rentalManageList= this.rentalManageService.findAll();
+        List<Stock> stockList = this.stockService.findStockAvailableAll();
+        List<Account> accountList= this.accountService.findAll();
+        
+        //モデル
+        model.addAttribute("rentalStatus",RentalStatus.values());
+        model.addAttribute("stockList",stockList);
+        model.addAttribute("accounts",accountList);
+        
  
-     //モデル
-     model.addAttribute("rentalStatus",RentalStatus.values());
-     model.addAttribute("stockList",stockList);
-     model.addAttribute("accounts",accountList);
- 
+        if(fig != null && bookTi != null){
+            
+            try {
+                SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date expectedRentalOn = sdFormat.parse(fig);
+                RentalManageDto rentalManageDto = new RentalManageDto();
+                rentalManageDto.setExpectedRentalOn(expectedRentalOn);
+                
+                List<Stock> pullDownList = this.rentalManageService.findStockId(bookTi,expectedRentalOn);
+
+                //titleに紐づくbookIdに紐づくstoclIdすべてstock=0、借りられてない本
+                model.addAttribute("stockList",pullDownList);
+                model.addAttribute("rentalManageDto",rentalManageDto);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            
+            }      
+        
+        } 
         if (!model.containsAttribute("rentalManageDto")) {
             model.addAttribute("rentalManageDto", new RentalManageDto());
         }
+       
  
         return "rental/add";
     }

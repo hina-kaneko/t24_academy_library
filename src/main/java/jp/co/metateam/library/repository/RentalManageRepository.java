@@ -26,4 +26,5 @@ public interface RentalManageRepository extends JpaRepository<RentalManage, Long
     @Query("SELECT r FROM RentalManage r WHERE r.stock.id =?1 AND r.status in (0,1)") 
      List<RentalManage> findByStockIdAndStatus(String newStock_id); 
 
+    
 }

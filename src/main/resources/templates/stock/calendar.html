@@ -35,7 +35,9 @@
                                     th:text="${targetYear + '年' + targetMonth + '月'}"></th>
                             </tr>
                             <tr class="days">
-                                <th th:each="day : ${daysOfWeek}" th:text="${day}"></th>
+                                <th th:each="day : ${daysOfWeek}" th:text="${day}"
+                                th:classappend="${#strings.contains(day, '土') ? 'saturday' : (#strings.contains(day, '日') ? 'sunday' : '')}">></th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -52,7 +54,8 @@
                                     <td
                                         th:if="${dayNum != 'x' and #dates.format(#dates.create(targetYear,targetMonth,statNum.index+1),'yyyy-MM-dd') >= #temporals.format(nowDate,'yyyy-MM-dd')
                                     }">
-                                        <a th:href="@{/rental/add(fig=((targetYear + '-' + targetMonth + '-' + (statNum.index)+1)))}"
+                                    <a th:href="@{/rental/add ((bookTi=${stock.get(0)},fig=${targetYear} + '-' + ${targetMonth} + '-' + ${statNum.index+1}))}"
+                                       
                                             th:text="${dayNum}"></a>
                                     </td>
                                 </th:block>
