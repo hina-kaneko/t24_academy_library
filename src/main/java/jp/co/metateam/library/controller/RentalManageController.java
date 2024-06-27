@@ -15,8 +15,8 @@ import jakarta.validation.Valid;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
+
 import java.util.Date;
  
 import jp.co.metateam.library.model.Account;
@@ -74,7 +74,7 @@ public class RentalManageController {
     }
  
     @GetMapping("/rental/add")
-        public String add(@RequestParam(required = false) String fig, String bookTi, Model model) {
+        public String add(@RequestParam(required = false) String fig, @RequestParam String bookTi, Model model) {
         //テーブルから情報を持ってくる
         List<RentalManage> rentalManageList= this.rentalManageService.findAll();
         List<Stock> stockList = this.stockService.findStockAvailableAll();
