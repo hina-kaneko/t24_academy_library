@@ -74,7 +74,7 @@ public class RentalManageController {
     }
  
     @GetMapping("/rental/add")
-        public String add(@RequestParam(required = false) String fig, @RequestParam String bookTi, Model model) {
+        public String add(@RequestParam(required = false) String fig, @RequestParam (required = false) String bookTi, Model model) {
         //テーブルから情報を持ってくる
         List<RentalManage> rentalManageList= this.rentalManageService.findAll();
         List<Stock> stockList = this.stockService.findStockAvailableAll();
