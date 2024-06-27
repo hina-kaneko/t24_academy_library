@@ -1,7 +1,8 @@
 package jp.co.metateam.library.service;
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +102,7 @@ public class RentalManageService {
             if (stock == null) {
                 throw new Exception("Stock not found.");
             }
-            
+            rentalManage = setRentalStatusDate(rentalManage, rentalManageDto.getStatus());
             rentalManageDto.setId(rentalManage.getId());
             rentalManage.setAccount(account);
             rentalManage.setExpectedRentalOn(rentalManageDto.getExpectedRentalOn());
@@ -130,5 +131,24 @@ public class RentalManageService {
 
         return rentalManage;
     }
+
+    public List<Stock> findStockId(String title,Date expectedRentalOn) {
+       List<String> allStockIdList = stockRepository.findByLendableBook(title);
+       List<String> rentalWaitBookList = stockRepository.findRentalWaitStockId(expectedRentalOn,allStockIdList);
+
+       List<String> rentaLingBookList = stockRepository.findRentLingStockId(expectedRentalOn,allStockIdList);
+
+       List<String> stockPulldown = new ArrayList<>(allStockIdList); 
+
+        // rentalWaitBookList の在庫IDを全在庫IDリストから除外
+        stockPulldown.removeAll(rentalWaitBookList);
+
+        // rentaLingBookList の在庫IDを全在庫IDリストから除外
+        stockPulldown.removeAll(rentaLingBookList);
+
+        return stockRepository.findAvailableStockList(stockPulldown);
+    }
+
 }
+
 

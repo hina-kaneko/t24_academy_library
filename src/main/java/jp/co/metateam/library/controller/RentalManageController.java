@@ -9,28 +9,29 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
- 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import jakarta.validation.Valid;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+
 import java.util.Date;
  
 import jp.co.metateam.library.model.Account;
-import jp.co.metateam.library.model.AccountDto;
-import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.service.AccountService;
-import jp.co.metateam.library.values.AuthorizationTypes;
+
 import jp.co.metateam.library.model.RentalManage;
 import jp.co.metateam.library.model.RentalManageDto;
 import jp.co.metateam.library.service.RentalManageService;
 import jp.co.metateam.library.values.RentalStatus;
 import jp.co.metateam.library.model.Stock;
-import jp.co.metateam.library.model.StockDto;
+
 import jp.co.metateam.library.service.StockService;
  
 import lombok.extern.log4j.Log4j2;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.validation.FieldError;
@@ -73,20 +74,41 @@ public class RentalManageController {
     }
  
     @GetMapping("/rental/add")
-    public String add(Model model) {
-     //テーブルから情報を持ってくる
-     List<RentalManage> rentalManageList= this.rentalManageService.findAll();
-     List<Stock> stockList = this.stockService.findStockAvailableAll();
-     List<Account> accountList= this.accountService.findAll();
+        public String add(@RequestParam(required = false) String fig, @RequestParam (required = false) String bookTi, Model model) {
+        //テーブルから情報を持ってくる
+        List<RentalManage> rentalManageList= this.rentalManageService.findAll();
+        List<Stock> stockList = this.stockService.findStockAvailableAll();
+        List<Account> accountList= this.accountService.findAll();
+        
+        //モデル
+        model.addAttribute("rentalStatus",RentalStatus.values());
+        model.addAttribute("stockList",stockList);
+        model.addAttribute("accounts",accountList);
+        
  
-     //モデル
-     model.addAttribute("rentalStatus",RentalStatus.values());
-     model.addAttribute("stockList",stockList);
-     model.addAttribute("accounts",accountList);
- 
+        if(fig != null && bookTi != null){
+            
+            try {
+                SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date expectedRentalOn = sdFormat.parse(fig);
+                RentalManageDto rentalManageDto = new RentalManageDto();
+                rentalManageDto.setExpectedRentalOn(expectedRentalOn);
+                
+                List<Stock> pullDownList = this.rentalManageService.findStockId(bookTi,expectedRentalOn);
+
+                //titleに紐づくbookIdに紐づくstoclIdすべてstock=0、借りられてない本
+                model.addAttribute("stockList",pullDownList);
+                model.addAttribute("rentalManageDto",rentalManageDto);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            
+            }      
+        
+        } 
         if (!model.containsAttribute("rentalManageDto")) {
             model.addAttribute("rentalManageDto", new RentalManageDto());
         }
+       
  
         return "rental/add";
     }
@@ -160,7 +182,7 @@ public class RentalManageController {
              
  
               model.addAttribute("rentalManageList",rentalManage);
-             
+              
               rentalManageDto.setId(rentalManage.getId());
               rentalManageDto.setEmployeeId(rentalManage.getAccount().getEmployeeId());
               rentalManageDto.setExpectedRentalOn(rentalManage.getExpectedRentalOn());

@@ -1,6 +1,7 @@
 package jp.co.metateam.library.controller;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,19 +140,21 @@ public class StockController {
         Integer targetYear = year == null ? today.getYear() : year;
         Integer targetMonth = today.getMonthValue();
 
+        LocalDate nowDate = LocalDate.now(ZoneId.of("Asia/Tokyo"));
         LocalDate startDate = LocalDate.of(targetYear, targetMonth, 1);
         Integer daysInMonth = startDate.lengthOfMonth();
 
         List<Object> daysOfWeek = this.stockService.generateDaysOfWeek(targetYear, targetMonth, startDate, daysInMonth);
-        List<String> stocks = this.stockService.generateValues(targetYear, targetMonth, daysInMonth);
+        List<List<Object>> stocks = this.stockService.generateValues(targetYear, targetMonth, daysInMonth);
 
         model.addAttribute("targetYear", targetYear);
         model.addAttribute("targetMonth", targetMonth);
         model.addAttribute("daysOfWeek", daysOfWeek);
         model.addAttribute("daysInMonth", daysInMonth);
 
-        model.addAttribute("stocks", stocks);
-
+        model.addAttribute("stocks",stocks);
+        model.addAttribute("nowDate",nowDate);
         return "stock/calendar";
+
     }
 }
