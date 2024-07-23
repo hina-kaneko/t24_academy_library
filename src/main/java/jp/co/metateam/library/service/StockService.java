@@ -79,6 +79,16 @@ public class StockService {
     }
 
     @Transactional
+    public  List<Stock> findAllAvailableStockList() {
+        return this.stockRepository.findAllAvailableStockList();
+    }
+
+    @Transactional
+    public List<Stock> findAllUnAvailableStockList() {
+        return this.stockRepository.findAllUnAvailableStockList();
+    }
+
+    @Transactional
     public void save(StockDto stockDto) throws Exception {
         try {
             Stock stock = new Stock();

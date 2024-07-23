@@ -49,6 +49,29 @@ public class StockController {
         return "stock/index";
     }
 
+    @GetMapping("/stock/showAll")
+    public String showAll(Model model) {
+        List<Stock> stockList = stockService.findAll();
+        model.addAttribute("stockList", stockList);
+        return "stock/index";
+    }
+
+    @GetMapping("/stock/filterByStatus")
+    public String filterByStatus(@RequestParam("status") int status, Model model) {
+        List<Stock> stockList;
+
+        if (status == 0) {
+            stockList = stockService.findAllAvailableStockList();
+        } else if (status == 1) {
+            stockList = stockService.findAllUnAvailableStockList();
+        } else {
+            stockList = stockService.findAll(); // ステータスが無効な場合は全てを表示
+        }
+
+        model.addAttribute("stockList", stockList);
+        return "stock/index";
+    }
+
     @GetMapping("/stock/add")
     public String add(Model model) {
         List<BookMst> bookMstList = this.bookMstService.findAll();

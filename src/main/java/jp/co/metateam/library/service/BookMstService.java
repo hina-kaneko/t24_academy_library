@@ -107,21 +107,6 @@ public class BookMstService {
         return false;
     }
 
-    // public boolean isValidTitle(String title, RedirectAttributes ra) {
-    //     if (StringUtils.isEmpty(title)) {
-    //         ra.addFlashAttribute("errTitle", "書籍タイトルは必須");
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
-    // public boolean isValidIsbn(String isbn, RedirectAttributes ra) {
-    //     if (StringUtils.isEmpty(isbn) || isbn.length() != 13) {
-    //         ra.addFlashAttribute("errISBN", "ISBNは13文字で入力してください");
-    //         return true;
-    //     }
-    //     return false;
-    // }
 }
 
 
