@@ -55,63 +55,52 @@
 }
 
 .search_bar {
-    display: flex; /* 横並び */
-    align-items: center; /* 垂直方向に中央揃え */
+    display: flex;
+    align-items: center;
     width: 100%;
     height: 35px;
     padding: 0 10px;
-    justify-content: flex-start; /* 左詰めに配置 */
 }
 
-.search_input { 
-    height: 100%; /* バーの高さに合わせる */
-    font-size: 18px; /* フォントサイズ */
-    width: 800px;
-    border: none; /* ボーダーをなしに */
-    outline: none; /* フォーカス時のアウトラインを消す */
-    padding: 5px 10px; /* 内側の余白 */
+.search_input, .form_input, #submit_btn, .show_all_btn {
+    height: 100%;
+    font-size: 16px;
+    outline: none;
+    padding: 5px 10px;
+    box-sizing: border-box;
 }
-
 
 .search_input {
-    display: flex; /* 横並びにする */
-    align-items: center; /* 垂直方向に中央揃え */
-    margin-right: 10px; /* ボタンとの間隔を追加 */
+    width: 800px;
+    margin-right: 10px;
 }
 
 .form_input {
-    width: 40%; /* search_inputと同じ幅に設定 */
-    height: 80%;
-    width: 80%; /* バーの高さに合わせる */
-    font-size: 16px; /* フォントサイズ */
-    border: 1px solid #ccc; /* 線のスタイルと色を設定 */
-    outline: none; /* フォーカス時のアウトラインを消す */
-    padding: 5px 10px; /* 内側の余白 */
-    box-sizing: border-box; /* paddingが要素の幅に含まれるようにする */
+    width: 40%;
 }
 
-
 #submit_btn {
-    width: 80px; /* 送信ボタンの幅 */
-    height: 80%; /* バーの高さに合わせる */
-    font-size: 16px; /* フォントサイズ */
-    background-color: #fbe3f9; /* 背景色 */
-    color: #545454; /* 文字色 */
-    border-radius: 0.5rem; /* 角丸 */
-    border: none; /* ボーダーをなしに */
-    margin-right: 10px; /* 「すべて表示」ボタンとの間隔 */
+    width: 80px;
+    height: 35px; /* 高さを調整 */
+    font-size: 16px;
+    background-color: #fbe3f9;
+    color: #545454;
+    border: none;
+    border-radius: 0.5rem;
+    margin-right: 10px;
 }
 
 .show_all_btn {
-    margin-left: 10px; /* ボタン間のスペースを追加 */
+    margin-left: 10px;
+    margin-top: -10px;
 }
 
 .show_all_btn button {
-    width: 100px; /* 「すべて表示」ボタンの幅 */
-    height: 100%; /* バーの高さに合わせる */
-    font-size: 16px; /* フォントサイズ */
-    background-color: #fbe3f9; /* 背景色 */
-    color: #545454; /* 文字色 */
-    border-radius: 0.5rem; /* 角丸 */
-    border: none; /* ボーダーをなしに */
+    width: 100px;
+    height: 35px; /* 高さを調整 */
+    font-size: 16px;
+    background-color: #fbe3f9;
+    color: #545454;
+    border: none;
+    border-radius: 0.5rem;
 }
