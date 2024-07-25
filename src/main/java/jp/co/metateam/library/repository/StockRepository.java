@@ -42,10 +42,10 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
     //0：利用可に紐づく在庫管理番号を取得
     @Query("SELECT s FROM Stock s WHERE s.status = 0")
-    List<Stock> findAllAvailableStockList();
+    List<Stock> findAllAvailableStockList(Integer status);
 
     //1：利用不可に紐づく在庫管理番号を取得
     @Query("SELECT s FROM Stock s WHERE s.status = 1")
-    List<Stock> findAllUnAvailableStockList();
+    List<Stock> findAllUnAvailableStockList(Integer status);
 
 }
