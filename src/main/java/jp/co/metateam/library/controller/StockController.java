@@ -54,7 +54,7 @@ public class StockController {
     public String showAll(Model model) {
         List<Stock> stockList = stockService.findAll();
         model.addAttribute("stockList", stockList);
-        return Constants.Return_stock_index;
+        return Constants.RETURN_STOCK_INDEX;
     }
 
     @GetMapping("/stock/filterByStatus")
@@ -69,8 +69,8 @@ public class StockController {
             stockList = stockService.findAll(); // ステータスが無効な場合は全てを表示
         }
     
-        model.addAttribute(Constants.Stock_List, stockList);
-        return Constants.Return_stock_index;
+        model.addAttribute(Constants.STOCK_LIST, stockList);
+        return Constants.RETURN_STOCK_INDEX;
     }
     
 
