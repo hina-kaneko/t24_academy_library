@@ -18,12 +18,31 @@
                         <span>在庫登録</span>
                     </a>
                 </div>
+                <div class="search_bar">
+                    <form th:action="@{/stock/filterByStatus}" method="get" style="display: flex; align-items: center;">
+                        <div class="search_input">
+                            <label for="bookSelector">在庫ステータスを検索<span class="text-red asterisk"></span></label>
+                            <select id="bookSelector" class="form_input" name="status" required>
+                                <option value="">在庫ステータスを選択</option>
+                                <option th:each="status : ${T(jp.co.metateam.library.values.StockStatus).values()}"
+                                        th:value="${status.value}" th:text="${status.text}"></option>
+                            </select>     
+                        </div>
+                        <button type="submit" id="submit_btn">検索</button>
+                    </form>
+                    <div class="show_all_btn">
+                        <form th:action="@{/stock/showAll}" method="get">
+                            <button type="submit">すべて表示</button>
+                        </form>
+                    </div>
+                </div>          
                 <table id="stock_table">
                     <thead>
                         <tr>
                             <th>在庫管理番号</th>
                             <th>書籍名</th>
                             <th>在庫ステータス</th>
+                            <th>貸出情報</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,6 +56,12 @@
                             </td>
                             <td th:text="*{bookMst.title}"></td>
                             <td th:text="${stock.status == 0 && (#lists.isEmpty(stock.rentalManages) || stock.rentalManages[0].status != 1) ? '利用可' : '利用不可'}"></td>
+                            <td>
+                                <div th:if="${not #lists.isEmpty(stock.rentalManages)}">
+                                    <div th:text="${'利用者：' + stock.rentalManages[0].account.name}"></div>
+                                    <div th:text="${'返却予定日：' + #dates.format(stock.rentalManages[0].expectedReturnOn, ('yyyy/MM/dd'))}"></div>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

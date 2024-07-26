@@ -30,7 +30,7 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
      //titleに紐づくbookIdに紐づくstockIdをすべて持ってくる
      @Query("SELECT s.id FROM Stock s JOIN s.bookMst bm WHERE s.bookMst.title = ?1")
      List<String> findByLendableBook(String title);
-
+ 
     @Query("SELECT rm.stock.id FROM RentalManage rm WHERE rm.expectedRentalOn <= ?1 AND ?1<= rm.expectedReturnOn AND rm.stock.Id IN(?2) AND rm.status = 0")
     List<String> findRentalWaitStockId(Date date, List<String> stockId);
 
@@ -39,5 +39,13 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
     @Query("SELECT s FROM Stock s WHERE s.id IN(?1)")
     List<Stock> findAvailableStockList(List<String> stockIdList);
- 
+
+    //0：利用可に紐づく在庫管理番号を取得
+    @Query("SELECT s FROM Stock s WHERE s.status = 0")
+    List<Stock> findAllAvailableStockList(Integer status);
+
+    //1：利用不可に紐づく在庫管理番号を取得
+    @Query("SELECT s FROM Stock s WHERE s.status = 1")
+    List<Stock> findAllUnAvailableStockList(Integer status);
+
 }

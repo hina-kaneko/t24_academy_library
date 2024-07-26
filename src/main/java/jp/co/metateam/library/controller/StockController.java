@@ -22,6 +22,7 @@ import jp.co.metateam.library.model.StockDto;
 import jp.co.metateam.library.service.BookMstService;
 import jp.co.metateam.library.service.StockService;
 import jp.co.metateam.library.values.StockStatus;
+import jp.co.metateam.library.constants.Constants;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -48,6 +49,31 @@ public class StockController {
 
         return "stock/index";
     }
+
+    @GetMapping("/stock/showAll")
+    public String showAll(Model model) {
+        List<Stock> stockList = stockService.findAll();
+        model.addAttribute("stockList", stockList);
+        return Constants.RETURN_STOCK_INDEX;
+    }
+
+    @GetMapping("/stock/filterByStatus")
+    public String filterByStatus(@RequestParam("status") Integer status, Model model) {
+        List<Stock> stockList;
+    
+        if (status.equals(Constants.STOCK_AVAILABLE)) {
+            stockList = stockService.findAllAvailableStockList();
+        } else if (status.equals(Constants.STOCK_UNAVAILABLE)) {
+            stockList = stockService.findAllUnAvailableStockList();
+        } else {
+            stockList = stockService.findAll(); // ステータスが無効な場合は全てを表示
+        }
+    
+        model.addAttribute(Constants.STOCK_LIST, stockList);
+        return Constants.RETURN_STOCK_INDEX;
+    }
+    
+
 
     @GetMapping("/stock/add")
     public String add(Model model) {
